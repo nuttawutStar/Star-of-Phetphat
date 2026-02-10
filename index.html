@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <!-- ตั้งค่าพื้นฐานของหน้าเว็บ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star of Phetphat - ดาวแห่งเพรชภัทร</title>
+
+    <!-- โหลดฟอนต์ภาษาไทย -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdn.jsdelivr.net/gh/lazywasabi/thai-web-fonts@7/fonts/Anuphan/var/Anuphan[wght].css" rel="stylesheet" />
+
+    <!-- ไฟล์ CSS หลัก -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- พื้นหลังอวกาศ / container ของดาว -->
+    <div id="space"></div>
+
+    <!-- ปุ่มควบคุม (เพลง / ซ่อนเมนู) -->
+    <div class="top-controls">
+        <button id="music-toggle" class="control-btn" onclick="toggleMusic()">🔈 เปิดเพลง</button>
+        <button id="toggle-ui-btn" class="control-btn" onclick="toggleUI()">👁️ ซ่อนเมนู</button>
+    </div>
+
+    <!-- กล่อง UI หลัก สำหรับกรอกคำอธิษฐาน -->
+    <div class="ui-container">
+        <h2> Star of Phetphat</h2>
+        <p class="subtitle">ฝากคำอธิษฐานของคุณลอยไปสู่ดวงดาวแห่งเพรชภัทร</p>
+        
+        <div class="input-group">
+            <!-- ชื่อผู้ใช้ -->
+            <input type="text" id="userName" placeholder="ชื่อของคุณ (หรือปล่อยว่าง)">
+
+            <!-- ข้อความคำอธิษฐาน -->
+            <textarea id="wishText" rows="3" placeholder="เขียนคำอธิษฐานของคุณ..."></textarea>
+            
+            <!-- ตั้งค่าดาว -->
+            <div class="config-grid">
+                <div class="config-item">
+                    <span>เลือกสีดาว</span>
+                    <input type="color" id="starColor" value="#f1c40f" class="color-picker-custom">
+                </div>
+                <div class="config-item">
+                    <span>ขนาดดาว</span>
+                    <select id="starSize">
+                        <option value="20px">ดวงเล็ก</option>
+                        <option value="35px" selected>ดวงกลาง</option>
+                        <option value="50px">ดวงใหญ่</option>
+                    </select>
+                </div>
+		        <div class="config-item">
+    		        <span>รูปแบบดาว</span>
+    		        <select id="starStyle">
+        	            <option value="star1.png" selected>⭐ คลาสสิก</option>
+        	            <option value="star2.png">✨ วิบวับ</option>
+        	            <option value="star3.png">🌟 เปล่งแสง</option>
+        	            <option value="star4.png">💫 แฟนตาซี</option>
+    		        </select>
+		        </div>
+            </div>
+
+            <!-- เลือกความเป็นส่วนตัว -->
+            <div class="privacy-selection">
+                <div class="toggle-container">
+                    <input type="radio" name="privacy" value="public" id="public" checked>
+                    <label for="public" class="toggle-label">🌏 สาธารณะ</label>
+
+                    <input type="radio" name="privacy" value="private" id="private">
+                    <label for="private" class="toggle-label">🔒 ส่วนตัว</label>
+                    
+                    <div class="selection-slider"></div>
+                </div>
+            </div>
+
+            <!-- ปุ่มส่งคำอธิษฐาน -->
+            <button class="btn-send-dark" onclick="sendWish()">ปล่อยดาวขึ้นฟ้า </button>
+        </div>
+    </div>
+
+    <!-- Modal แสดงคำอธิษฐาน -->
+    <div id="wishModal" class="modal" onclick="closeModalOutside(event)">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal()">&times;</span>
+            <h3 id="modalName"></h3>
+            <div class="wish-display">
+                <p id="modalText" style="font-size: 18px; line-height: 1.6;"></p>
+                
+                <!-- ข้อความให้กำลังใจ -->
+                <div style="text-align: left; margin-top: 20px;">
+                    <span style="font-size: 14px; color: #f1c40f;">✨ ข้อความจากเพื่อนร่วมทาง:</span>
+                    <div id="supportList" style="max-height: 180px; overflow-y: auto; margin-top: 10px; padding-right: 5px;"></div>
+                </div>
+
+                <!-- ส่งข้อความให้กำลังใจ -->
+                <div style="display: flex; gap: 8px; margin-top: 15px;">
+                    <input type="text" id="supportInput" placeholder="เขียนให้กำลังใจ..." 
+                           style="flex: 1; margin: 0; padding: 10px; font-size: 13px; border-radius: 20px;">
+                    <button onclick="sendSupport()" 
+                            style="background: #f1c40f; color: #000; border: none; border-radius: 50%; width: 40px; height: 40px; cursor: pointer; font-weight: bold;">
+                        >
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- เพลงพื้นหลัง -->
+    <audio id="bg-music" loop autoplay>
+        <source src="assets/sounds/ambient-space.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- เสียงเอฟเฟกต์ -->
+    <audio id="sfx-wish" src="assets/sounds/wish.mp3" preload="auto"></audio>
+    <audio id="sfx-click" src="assets/sounds/click.mp3" preload="auto"></audio>
+    <audio id="sfx-launch" preload="auto">
+        <source src="assets/sounds/launch.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+    <!-- ตั้งค่า Firebase -->
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA8KLb6PC8hp81hEfJPQhA_kGWsCpjNTAA",
+            authDomain: "starwish-df324.firebaseapp.com",
+            databaseURL: "https://starwish-df324-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "starwish-df324",
+            storageBucket: "starwish-df324.firebasestorage.app",
+            messagingSenderId: "474942226762",
+            appId: "1:474942226762:web:d120254eb08f8be5ea81b3",
+            measurementId: "G-HSJ1WEM91M"
+        };
+       
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+    </script>
+
+    <!-- JavaScript หลัก -->
+    <script src="script.js"></script>
+</body>
+</html>

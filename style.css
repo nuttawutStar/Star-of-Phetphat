@@ -1,0 +1,388 @@
+@import url('https://fonts.googleapis.com/css2?family=Anuphan:wght@300;500;600&display=swap');
+
+/* ตั้งค่าพื้นฐานของทั้งหน้าเว็บ */
+body, html {
+    margin: 0; padding: 0; width: 100%; height: 100%;
+    overflow: hidden; font-family: 'Anuphan', sans-serif;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('Myspace.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: white;
+}
+
+/* กลุ่มปุ่มควบคุมด้านบนขวา */
+.top-controls {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 5000; 
+}
+
+/* ปุ่มควบคุมทั่วไป */
+.control-btn {
+    pointer-events: auto !important;
+    background: rgba(15, 20, 25, 0.8);
+    border: 1px solid #f1c40f;
+    color: #f1c40f;
+    padding: 8px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Anuphan', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(241, 196, 15, 0.1);
+    transition: 0.3s;
+}
+
+/* เอฟเฟกต์เมื่อเอาเมาส์ชี้ปุ่ม */
+.control-btn:hover {
+    background: #f1c40f;
+    color: #000;
+}
+
+/* ปรับ UI สำหรับหน้าจอมือถือ */
+@media screen and (max-width: 480px) {
+
+    /* ย้ายปุ่มควบคุมไปด้านล่าง */
+    .top-controls {
+        top: auto; 
+        right: 15px;
+        bottom: 20px;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* ปรับขนาดปุ่มให้เหมาะกับมือถือ */
+    .control-btn {
+        font-family: 'Anuphan', sans-serif;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        box-shadow: 0 0 10px rgba(241, 196, 15, 0.1);
+        padding: 10px 18px;
+        font-size: 13px;
+        border-radius: 50px;
+        background: rgba(15, 20, 25, 0.9);
+    }
+
+    /* ปรับกล่อง UI หลัก */
+    .ui-container {
+        width: 260px;
+        margin: 3vh auto;
+        padding: 15px 20px;
+        border-radius: 20px;
+    }
+
+    h2 { font-size: 20px; margin-bottom: 5px; }
+    .subtitle { font-size: 11px; margin-bottom: 10px; }
+    input, textarea, select { padding: 8px 12px; font-size: 13px; margin: 4px 0; }
+    .btn-send-dark { padding: 12px; font-size: 14px; margin-top: 10px; }
+    .config-grid { gap: 8px; margin: 10px 0; }
+    .config-item span { font-size: 10px; }
+}
+
+/* พื้นที่ฉากหลังสำหรับดาว */
+#space {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* กล่อง UI หลักสำหรับกรอกคำอธิษฐาน */
+.ui-container {
+    position: relative;
+    z-index: 200;
+    width: 340px;
+    margin: 8vh auto;
+    padding: 30px;
+    background: rgba(15, 20, 25, 0.85);
+    backdrop-filter: blur(20px);
+    border-radius: 28px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out, visibility 0.6s;
+    opacity: 1;
+    visibility: visible;
+    will-change: opacity, transform;
+}
+
+/* สถานะซ่อน UI */
+.ui-container.hidden {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(-10px) scale(0.98);
+}
+
+/* หัวข้อหลัก */
+h2 {
+    font-size: 32px;
+    margin: 0;
+    color: #f1c40f;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(241, 196, 15, 0.3);
+}
+
+/* ข้อความรองใต้หัวข้อ */
+.subtitle {
+    font-size: 15px;
+    color: #888;
+    margin-bottom: 20px;
+}
+
+/* ช่องกรอกข้อมูลทั้งหมด */
+input, textarea, select {
+    width: 100%;
+    box-sizing: border-box;
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.4);
+    color: white;
+    font-family: 'Anuphan', sans-serif;
+    outline: none;
+}
+
+/* จัด layout ตัวเลือกดาว */
+.config-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 15px 0;
+}
+
+/* ชื่อหัวข้อย่อยของแต่ละตัวเลือก */
+.config-item span {
+    display: block;
+    font-size: 12px;
+    color: #f1c40f;
+    text-align: left;
+    margin-bottom: 5px;
+}
+
+/* ปรับ input เลือกสี */
+.color-picker-custom {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 45px !important;
+    cursor: pointer;
+    padding: 0 !important;
+}
+
+/* รูปแบบสีใน color picker */
+.color-picker-custom::-webkit-color-swatch {
+    border-radius: 10px;
+    border: none;
+}
+
+/* โซนเลือก public / private */
+.privacy-selection {
+    margin: 15px 0 25px 0;
+}
+
+/* กล่อง toggle */
+.toggle-container {
+    position: relative;
+    display: flex;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 12px;
+    padding: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* ซ่อน radio จริง */
+.toggle-container input {
+    display: none;
+}
+
+/* ป้ายข้อความ toggle */
+.toggle-label {
+    flex: 1;
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 2;
+    transition: 0.3s;
+    color: #666;
+    text-align: center;
+}
+
+/* สถานะที่ถูกเลือก */
+input:checked + .toggle-label {
+    color: #fff;
+    font-weight: bold;
+}
+
+/* แถบเลื่อนของ toggle */
+.selection-slider {
+    position: absolute;
+    height: calc(100% - 8px);
+    width: calc(50% - 4px);
+    background: rgba(241, 196, 15, 0.1);
+    border: 1px solid rgba(241, 196, 15, 0.3);
+    border-radius: 10px;
+    top: 4px;
+    left: 4px;
+    transition: 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    z-index: 1;
+}
+
+/* เลื่อน toggle เมื่อเลือก private */
+#private:checked ~ .selection-slider {
+    transform: translateX(100%);
+}
+
+/* ปุ่มส่งคำอธิษฐาน */
+.btn-send-dark {
+    width: 100%;
+    padding: 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(241, 196, 15, 0.2);
+    background: #0a0c10;
+    color: #f1c40f;
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.4s;
+    letter-spacing: 1px;
+    font-family: 'Anuphan', sans-serif;
+}
+
+/* เอฟเฟกต์ hover ปุ่ม */
+.btn-send-dark:hover {
+    background: #111;
+    border-color: #f1c40f;
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+    transform: translateY(-2px);
+}
+
+/* กล่องดาวแต่ละดวง */
+.star {
+    position: absolute;
+    cursor: pointer;
+    z-index: 999;
+    pointer-events: auto !important;
+    animation: floating linear forwards;
+}
+
+/* ตัวไอคอนดาว */
+.star-icon {
+    animation: rotating linear infinite;
+    filter: drop-shadow(0 0 8px currentColor);
+}
+
+/* ชื่อใต้ดาว */
+.star-name {
+    font-size: 30px;
+    margin-top: 4px;
+    white-space: nowrap;
+}
+
+/* กล่อง modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+}
+
+/* เนื้อหา modal */
+.modal-content {
+    background: #151921;
+    margin: 15% auto;
+    padding: 30px;
+    width: 85%;
+    max-width: 380px;
+    border-radius: 25px;
+    border: 1px solid #333;
+    position: relative;
+}
+
+/* ปุ่มปิด modal */
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #555;
+}
+
+/* กล่องแสดงคำอธิษฐาน */
+.wish-display {
+    background: rgba(255,255,255,0.03);
+    padding: 20px;
+    border-radius: 15px;
+    margin: 15px 0;
+    border-left: 4px solid #f1c40f;
+}
+
+/* แอนิเมชันลอยขึ้นของดาว */
+@keyframes floating {
+    0% { transform: translate(-50%, 110vh); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translate(-50%, -20vh); opacity: 0; }
+}
+
+/* แอนิเมชันหมุนของดาว */
+@keyframes rotating {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* เอฟเฟกต์ดาวจางหาย */
+.star.fade-out {
+    opacity: 0 !important;
+    transition: opacity 1.5s ease-out;
+}
+
+/* scrollbar ของกล่องข้อความ */
+#supportList::-webkit-scrollbar {
+    width: 4px;
+}
+#supportList::-webkit-scrollbar-thumb {
+    background: rgba(241, 196, 15, 0.3);
+    border-radius: 10px;
+}
+
+/* ปุ่มปิด modal ใหญ่ */
+.close-button {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 30px;
+    color: #666;
+    cursor: pointer;
+    z-index: 9999;
+    padding: 10px;
+}
+
+/* ขนาดไอคอนดาว */
+.star-icon {
+    width: 3em;
+    height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* รูปดาว */
+.star-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform-origin: center;
+    animation: rotating 10s linear infinite;
+}
